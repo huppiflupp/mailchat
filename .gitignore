@@ -1,0 +1,6 @@
+.cockpit/
+__pycache__/
+*.pyc
+dist/
+*.egg-info/
+build/

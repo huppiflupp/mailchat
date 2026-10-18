@@ -1,0 +1,206 @@
+{
+  "extName": {
+    "message": "Mail Chat (local)"
+  },
+  "extDescription": {
+    "message": "Chat with your own mailbox. A local LLM searches your mail – nothing leaves your computer. Requires the free mailchat server (see homepage)."
+  },
+  "openChat": {
+    "message": "Open Mail Chat"
+  },
+  "title": {
+    "message": "Mail Chat"
+  },
+  "connecting": {
+    "message": "connecting …"
+  },
+  "reindexBtn": {
+    "message": "Update index"
+  },
+  "reindexTitle": {
+    "message": "Read new mails now"
+  },
+  "clearBtn": {
+    "message": "New"
+  },
+  "clearTitle": {
+    "message": "Clear the conversation"
+  },
+  "hintIntro": {
+    "message": "Ask about mails in your mailbox, e.g."
+  },
+  "hintEx1": {
+    "message": "“When does my car insurance renew?”"
+  },
+  "hintEx2": {
+    "message": "“What did the tax advisor send last?”"
+  },
+  "hintEx3": {
+    "message": "“Invoices from this year”"
+  },
+  "hintLocal": {
+    "message": "Runs completely on your computer."
+  },
+  "placeholder": {
+    "message": "Ask a question … (Enter sends · Ctrl+Space speaks)"
+  },
+  "placeholderNoVoice": {
+    "message": "Ask a question … (Enter sends)"
+  },
+  "micTitle": {
+    "message": "Voice input (Ctrl+Space): click, speak, click again"
+  },
+  "sendBtn": {
+    "message": "Send"
+  },
+  "toolRead": {
+    "message": "reading mail #$ARG$",
+    "placeholders": {
+      "arg": {
+        "content": "$1"
+      }
+    }
+  },
+  "toolSearch": {
+    "message": "searching $ARG$",
+    "placeholders": {
+      "arg": {
+        "content": "$1"
+      }
+    }
+  },
+  "toolAll": {
+    "message": "all mails"
+  },
+  "toolFrom": {
+    "message": "from $ARG$",
+    "placeholders": {
+      "arg": {
+        "content": "$1"
+      }
+    }
+  },
+  "toolIn": {
+    "message": "in $ARG$",
+    "placeholders": {
+      "arg": {
+        "content": "$1"
+      }
+    }
+  },
+  "toolAfter": {
+    "message": "since $ARG$",
+    "placeholders": {
+      "arg": {
+        "content": "$1"
+      }
+    }
+  },
+  "toolBefore": {
+    "message": "before $ARG$",
+    "placeholders": {
+      "arg": {
+        "content": "$1"
+      }
+    }
+  },
+  "hits": {
+    "message": " – $ARG$ found",
+    "placeholders": {
+      "arg": {
+        "content": "$1"
+      }
+    }
+  },
+  "openMailTitle": {
+    "message": "Open in Thunderbird"
+  },
+  "noSubject": {
+    "message": "(no subject)"
+  },
+  "mailNotFound": {
+    "message": "The mail “$ARG$” was not found in Thunderbird (deleted or moved in the meantime? “Update index” helps).",
+    "placeholders": {
+      "arg": {
+        "content": "$1"
+      }
+    }
+  },
+  "noServer": {
+    "message": "No connection to the mailchat server ($ARG$). Is it running? Check with: mailchat doctor",
+    "placeholders": {
+      "arg": {
+        "content": "$1"
+      }
+    }
+  },
+  "statusMails": {
+    "message": "$ARG$ mails in the index",
+    "placeholders": {
+      "arg": {
+        "content": "$1"
+      }
+    }
+  },
+  "statusIndexing": {
+    "message": "indexing …"
+  },
+  "statusLastIndex": {
+    "message": "updated $ARG$",
+    "placeholders": {
+      "arg": {
+        "content": "$1"
+      }
+    }
+  },
+  "statusLlmOnDemand": {
+    "message": "language model starts with the first question"
+  },
+  "statusLlmMissing": {
+    "message": "⚠ language model $ARG$ not reachable",
+    "placeholders": {
+      "arg": {
+        "content": "$1"
+      }
+    }
+  },
+  "statusIndexError": {
+    "message": "⚠ index: $ARG$",
+    "placeholders": {
+      "arg": {
+        "content": "$1"
+      }
+    }
+  },
+  "statusNoServer": {
+    "message": "⚠ mailchat server not reachable (port 8095)"
+  },
+  "recording": {
+    "message": "● Recording – speak now, then 🎤 or Ctrl+Space to finish (Esc cancels)"
+  },
+  "recFailed": {
+    "message": "Recording could not start – is the mailchat server running?"
+  },
+  "recognizing": {
+    "message": "recognising speech …"
+  },
+  "nothingHeard": {
+    "message": "Nothing understood – is the microphone on? (default input in the sound settings)"
+  },
+  "voiceFailed": {
+    "message": "Speech recognition failed ($ARG$)",
+    "placeholders": {
+      "arg": {
+        "content": "$1"
+      }
+    }
+  },
+  "toolQuery": {
+    "message": "“$ARG$”",
+    "placeholders": {
+      "arg": {
+        "content": "$1"
+      }
+    }
+  }
+}

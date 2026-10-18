@@ -1,0 +1,206 @@
+{
+  "extName": {
+    "message": "Mail-Chat (lokal)"
+  },
+  "extDescription": {
+    "message": "Mit dem eigenen Postfach chatten. Ein lokales LLM durchsucht deine Mails – nichts verlässt den Rechner. Braucht den kostenlosen mailchat-Server (siehe Homepage)."
+  },
+  "openChat": {
+    "message": "Mail-Chat öffnen"
+  },
+  "title": {
+    "message": "Mail-Chat"
+  },
+  "connecting": {
+    "message": "verbinde …"
+  },
+  "reindexBtn": {
+    "message": "Index aktualisieren"
+  },
+  "reindexTitle": {
+    "message": "Neue Mails jetzt einlesen"
+  },
+  "clearBtn": {
+    "message": "Neu"
+  },
+  "clearTitle": {
+    "message": "Unterhaltung leeren"
+  },
+  "hintIntro": {
+    "message": "Frag nach Mails in deinem Postfach, z. B."
+  },
+  "hintEx1": {
+    "message": "„Wann verlängert sich meine Autoversicherung?“"
+  },
+  "hintEx2": {
+    "message": "„Was hat der Steuerberater zuletzt geschickt?“"
+  },
+  "hintEx3": {
+    "message": "„Rechnungen aus diesem Jahr“"
+  },
+  "hintLocal": {
+    "message": "Läuft komplett auf deinem Rechner."
+  },
+  "placeholder": {
+    "message": "Frage stellen … (Enter senden · Strg+Leertaste sprechen)"
+  },
+  "placeholderNoVoice": {
+    "message": "Frage stellen … (Enter senden)"
+  },
+  "micTitle": {
+    "message": "Spracheingabe (Strg+Leertaste): klicken, sprechen, nochmal klicken"
+  },
+  "sendBtn": {
+    "message": "Senden"
+  },
+  "toolRead": {
+    "message": "lese Mail #$ARG$",
+    "placeholders": {
+      "arg": {
+        "content": "$1"
+      }
+    }
+  },
+  "toolSearch": {
+    "message": "suche $ARG$",
+    "placeholders": {
+      "arg": {
+        "content": "$1"
+      }
+    }
+  },
+  "toolAll": {
+    "message": "alle Mails"
+  },
+  "toolFrom": {
+    "message": "von $ARG$",
+    "placeholders": {
+      "arg": {
+        "content": "$1"
+      }
+    }
+  },
+  "toolIn": {
+    "message": "in $ARG$",
+    "placeholders": {
+      "arg": {
+        "content": "$1"
+      }
+    }
+  },
+  "toolAfter": {
+    "message": "ab $ARG$",
+    "placeholders": {
+      "arg": {
+        "content": "$1"
+      }
+    }
+  },
+  "toolBefore": {
+    "message": "vor $ARG$",
+    "placeholders": {
+      "arg": {
+        "content": "$1"
+      }
+    }
+  },
+  "hits": {
+    "message": " – $ARG$ Treffer",
+    "placeholders": {
+      "arg": {
+        "content": "$1"
+      }
+    }
+  },
+  "openMailTitle": {
+    "message": "In Thunderbird öffnen"
+  },
+  "noSubject": {
+    "message": "(kein Betreff)"
+  },
+  "mailNotFound": {
+    "message": "Die Mail „$ARG$“ wurde in Thunderbird nicht gefunden (inzwischen gelöscht oder verschoben? „Index aktualisieren“ hilft).",
+    "placeholders": {
+      "arg": {
+        "content": "$1"
+      }
+    }
+  },
+  "noServer": {
+    "message": "Keine Verbindung zum mailchat-Server ($ARG$). Läuft er? Prüfen mit: mailchat doctor",
+    "placeholders": {
+      "arg": {
+        "content": "$1"
+      }
+    }
+  },
+  "statusMails": {
+    "message": "$ARG$ Mails im Index",
+    "placeholders": {
+      "arg": {
+        "content": "$1"
+      }
+    }
+  },
+  "statusIndexing": {
+    "message": "indiziert gerade …"
+  },
+  "statusLastIndex": {
+    "message": "zuletzt aktualisiert $ARG$",
+    "placeholders": {
+      "arg": {
+        "content": "$1"
+      }
+    }
+  },
+  "statusLlmOnDemand": {
+    "message": "Sprachmodell startet bei der ersten Frage"
+  },
+  "statusLlmMissing": {
+    "message": "⚠ Sprachmodell $ARG$ nicht erreichbar",
+    "placeholders": {
+      "arg": {
+        "content": "$1"
+      }
+    }
+  },
+  "statusIndexError": {
+    "message": "⚠ Index: $ARG$",
+    "placeholders": {
+      "arg": {
+        "content": "$1"
+      }
+    }
+  },
+  "statusNoServer": {
+    "message": "⚠ mailchat-Server nicht erreichbar (Port 8095)"
+  },
+  "recording": {
+    "message": "● Aufnahme läuft – sprich jetzt, dann 🎤 oder Strg+Leertaste zum Beenden (Esc bricht ab)"
+  },
+  "recFailed": {
+    "message": "Aufnahme konnte nicht starten – läuft der mailchat-Server?"
+  },
+  "recognizing": {
+    "message": "erkenne Sprache …"
+  },
+  "nothingHeard": {
+    "message": "Nichts verstanden – Mikrofon an? (Standard-Eingang in den Audio-Einstellungen)"
+  },
+  "voiceFailed": {
+    "message": "Spracherkennung fehlgeschlagen ($ARG$)",
+    "placeholders": {
+      "arg": {
+        "content": "$1"
+      }
+    }
+  },
+  "toolQuery": {
+    "message": "„$ARG$“",
+    "placeholders": {
+      "arg": {
+        "content": "$1"
+      }
+    }
+  }
+}

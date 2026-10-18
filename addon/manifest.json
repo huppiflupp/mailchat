@@ -1,0 +1,42 @@
+{
+  "manifest_version": 3,
+  "name": "__MSG_extName__",
+  "description": "__MSG_extDescription__",
+  "version": "1.0.0",
+  "author": "huppiflupp",
+  "homepage_url": "https://github.com/huppiflupp/mailchat",
+  "default_locale": "en",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "mailchat@huppiflupp.github.io",
+      "strict_min_version": "128.0"
+    }
+  },
+  "background": {
+    "scripts": [
+      "background.js"
+    ]
+  },
+  "action": {
+    "default_title": "__MSG_title__",
+    "default_label": "__MSG_title__",
+    "default_icon": "icon.svg"
+  },
+  "commands": {
+    "open-chat": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+K"
+      },
+      "description": "__MSG_openChat__"
+    }
+  },
+  "permissions": [
+    "messagesRead"
+  ],
+  "host_permissions": [
+    "http://127.0.0.1/*"
+  ],
+  "icons": {
+    "64": "icon.svg"
+  }
+}

@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mailchat"
+version = "1.0.0"
+description = "Chat with your own Thunderbird mailbox using a local LLM – nothing leaves your computer."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.11"
+dependencies = []
+classifiers = [
+  "Environment :: Console",
+  "Operating System :: Microsoft :: Windows",
+  "Operating System :: POSIX :: Linux",
+  "Topic :: Communications :: Email",
+]
+
+[project.optional-dependencies]
+# Voice input on Windows/macOS (Linux records with pw-record instead).
+voice = ["sounddevice>=0.4"]
+
+[project.scripts]
+mailchat = "mailchat.__main__:run"
+
+[project.urls]
+Homepage = "https://github.com/huppiflupp/mailchat"
+Issues = "https://github.com/huppiflupp/mailchat/issues"
+
+[tool.setuptools]
+packages = ["mailchat"]

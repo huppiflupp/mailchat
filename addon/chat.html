@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title data-i18n="title">Mail Chat</title>
+  <link rel="stylesheet" href="chat.css">
+</head>
+<body>
+  <header>
+    <h1 data-i18n="title">Mail Chat</h1>
+    <span id="status" class="status" data-i18n="connecting"></span>
+    <button id="reindex" data-i18n="reindexBtn" data-i18n-title="reindexTitle"></button>
+    <button id="clear" data-i18n="clearBtn" data-i18n-title="clearTitle"></button>
+  </header>
+  <main id="log">
+    <div class="hint">
+      <span data-i18n="hintIntro"></span> <em data-i18n="hintEx1"></em>,
+      <em data-i18n="hintEx2"></em>, <em data-i18n="hintEx3"></em>.
+      <span data-i18n="hintLocal"></span>
+    </div>
+  </main>
+  <form id="form">
+    <textarea id="input" rows="2" data-i18n-placeholder="placeholderNoVoice" autofocus></textarea>
+    <button id="mic" type="button" data-i18n-title="micTitle" hidden>🎤</button>
+    <button id="send" type="submit" data-i18n="sendBtn"></button>
+  </form>
+  <script src="chat.js"></script>
+</body>
+</html>
