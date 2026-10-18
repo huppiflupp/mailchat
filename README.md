@@ -11,11 +11,7 @@ No mail leaves your machine, there is no cloud service and no account.
 
 ## How it works
 
-```
-Thunderbird add-on (chat tab)  ──HTTP──▶  mailchat server (127.0.0.1:8095)  ──▶  local LLM (Ollama)
-                                               │
-                                               └─ full-text index ◀── Thunderbird's mail files (read-only)
-```
+![How Mail Chat works: Thunderbird add-on, mailchat server, local LLM and full-text index, all on your computer](docs/how-it-works.svg)
 
 Mail Chat has two parts:
 

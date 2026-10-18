@@ -12,11 +12,7 @@ und kein Konto.
 
 ## So funktioniert es
 
-```
-Thunderbird-Add-on (Chat-Tab)  ──HTTP──▶  mailchat-Server (127.0.0.1:8095)  ──▶  lokales LLM (Ollama)
-                                               │
-                                               └─ Volltextindex ◀── Mail-Dateien von Thunderbird (nur lesend)
-```
+![So funktioniert Mail-Chat: Thunderbird-Add-on, mailchat-Server, lokales LLM und Volltextindex, alles auf deinem Rechner](docs/how-it-works.de.svg)
 
 Mail-Chat besteht aus zwei Teilen:
 
