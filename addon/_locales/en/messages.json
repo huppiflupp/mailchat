@@ -290,5 +290,61 @@
         "content": "$1"
       }
     }
+  },
+  "updateBtn": {
+    "message": "Updates"
+  },
+  "updateTitle": {
+    "message": "Look for a new version of Mail Chat on GitHub"
+  },
+  "updateChecking": {
+    "message": "Looking for updates …"
+  },
+  "updateNone": {
+    "message": "Mail Chat is up to date (version $ARG$).",
+    "placeholders": {
+      "arg": {
+        "content": "$1"
+      }
+    }
+  },
+  "updateAvailable": {
+    "message": "Version $ARG$ is available.",
+    "placeholders": {
+      "arg": {
+        "content": "$1"
+      }
+    }
+  },
+  "updateNotes": {
+    "message": "What's new?"
+  },
+  "updateInstall": {
+    "message": "Update now"
+  },
+  "updateRunning": {
+    "message": "Updating …"
+  },
+  "updateDone": {
+    "message": "Done – the server now runs version $ARG$.",
+    "placeholders": {
+      "arg": {
+        "content": "$1"
+      }
+    }
+  },
+  "updateFailed": {
+    "message": "Update failed: $ARG$",
+    "placeholders": {
+      "arg": {
+        "content": "$1"
+      }
+    }
+  },
+  "updateNoRestart": {
+    "message": "The server did not restart after the update. Please log out and back in."
+  },
+  "updateAddon": {
+    "message": "Thunderbird updates the add-on by itself. To do it right away: ☰ → Add-ons and Themes → gear icon → Check for Updates."
   }
 }

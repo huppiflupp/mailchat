@@ -290,5 +290,61 @@
         "content": "$1"
       }
     }
+  },
+  "updateBtn": {
+    "message": "Updates"
+  },
+  "updateTitle": {
+    "message": "Nach einer neuen Version von Mail-Chat auf GitHub suchen"
+  },
+  "updateChecking": {
+    "message": "Suche nach Updates …"
+  },
+  "updateNone": {
+    "message": "Mail-Chat ist aktuell (Version $ARG$).",
+    "placeholders": {
+      "arg": {
+        "content": "$1"
+      }
+    }
+  },
+  "updateAvailable": {
+    "message": "Version $ARG$ ist verfügbar.",
+    "placeholders": {
+      "arg": {
+        "content": "$1"
+      }
+    }
+  },
+  "updateNotes": {
+    "message": "Was ist neu?"
+  },
+  "updateInstall": {
+    "message": "Jetzt aktualisieren"
+  },
+  "updateRunning": {
+    "message": "Aktualisiere …"
+  },
+  "updateDone": {
+    "message": "Fertig – der Server läuft jetzt mit Version $ARG$.",
+    "placeholders": {
+      "arg": {
+        "content": "$1"
+      }
+    }
+  },
+  "updateFailed": {
+    "message": "Update fehlgeschlagen: $ARG$",
+    "placeholders": {
+      "arg": {
+        "content": "$1"
+      }
+    }
+  },
+  "updateNoRestart": {
+    "message": "Der Server hat nach dem Update nicht neu gestartet. Bitte ab- und wieder anmelden."
+  },
+  "updateAddon": {
+    "message": "Das Add-on aktualisiert Thunderbird selbst. Sofort geht es über ☰ → Add-ons und Themes → Zahnrad → Nach Updates suchen."
   }
 }

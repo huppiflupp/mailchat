@@ -17,3 +17,7 @@ messenger.action.onClicked.addListener(openChat);
 messenger.commands.onCommand.addListener((cmd) => {
   if (cmd === "open-chat") openChat();
 });
+
+// Thunderbird finds updates through update_url in the manifest. Apply them right
+// away instead of at the next restart; the chat tab reloads with the new version.
+messenger.runtime.onUpdateAvailable.addListener(() => messenger.runtime.reload());

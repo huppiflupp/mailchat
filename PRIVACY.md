@@ -20,6 +20,9 @@ parties.
   language model configured by you. By default this is Ollama on the same computer, so no
   data leaves your machine. If you configure a remote language model, mail content is sent
   to it; that is your choice and outside this add-on.
+- Only when you click **Updates**, the server asks GitHub (api.github.com) for the latest
+  release, and installs it if you confirm. Thunderbird checks for add-on updates at
+  raw.githubusercontent.com. No data about you or your mail is sent.
 - There is no telemetry, no analytics, no advertising and no remote code.
 
 Questions: <https://github.com/huppiflupp/mailchat/issues>
@@ -46,6 +49,9 @@ Das Add-on Mail-Chat erhebt, speichert oder übermittelt keine Daten an den Auto
   an das von dir eingestellte Sprachmodell. Standardmäßig ist das Ollama auf demselben
   Rechner, es verlassen also keine Daten den Computer. Stellst du ein entferntes Sprachmodell
   ein, gehen Mailinhalte dorthin; das ist deine Entscheidung und liegt außerhalb dieses Add-ons.
+- Nur wenn du auf **Updates** klickst, fragt der Server bei GitHub (api.github.com) nach dem
+  neuesten Release und installiert es, wenn du zustimmst. Thunderbird sucht Add-on-Updates
+  unter raw.githubusercontent.com. Dabei werden keine Daten über dich oder deine Mails gesendet.
 - Es gibt keine Telemetrie, keine Statistik, keine Werbung und keinen nachgeladenen Code.
 
 Fragen: <https://github.com/huppiflupp/mailchat/issues>

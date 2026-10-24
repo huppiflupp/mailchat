@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mailchat"
-version = "1.1.0"
+dynamic = ["version"]
 description = "Chat with your own Thunderbird mailbox using a local LLM – nothing leaves your computer."
 readme = "README.md"
 license = "MIT"
@@ -30,3 +30,6 @@ Issues = "https://github.com/huppiflupp/mailchat/issues"
 
 [tool.setuptools]
 packages = ["mailchat"]
+
+[tool.setuptools.dynamic]
+version = {attr = "mailchat.__version__"}

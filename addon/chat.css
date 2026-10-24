@@ -89,3 +89,4 @@ body.drop main { outline: 2px dashed var(--accent); outline-offset: -10px; }
 .card .meta { grid-column: 2; color: var(--muted); font-size: 12.5px; white-space: pre-wrap; }
 .card button { grid-column: 3; grid-row: 1 / span 2; }
 .card .note { grid-column: 1 / -1; color: var(--warn); font-size: 12.5px; }
+.msg p.error { color: var(--warn); }

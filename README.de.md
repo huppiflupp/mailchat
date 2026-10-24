@@ -142,6 +142,9 @@ Der Knopf **Mail-Chat** erscheint in der Werkzeugleiste:
 - Ein Klick auf `#id` oder eine Mail-Karte öffnet die Mail in Thunderbird.
 - Neue Mails werden alle 10 Minuten eingelesen; **Index aktualisieren** macht es sofort.
 - **Neu** beginnt eine neue Unterhaltung.
+- **Updates** schaut auf GitHub nach einer neuen Version und installiert sie auf Klick
+  (`git pull` in einer Arbeitskopie, sonst pip); der Server startet danach von selbst neu.
+  Das Add-on aktualisiert Thunderbird selbst.
 - Die Antwort kommt in der Sprache von Thunderbird (Deutsch oder Englisch).
 
 Gute Fragen nennen, worum es in der Mail geht: *„Rechnungen vom Stromanbieter aus diesem
@@ -228,6 +231,8 @@ whisper-server -m models/ggml-large-v3-turbo-q8_0.bin --host 127.0.0.1 --port 80
   tust du. Es liest die Dateien von Thunderbird und legt seinen Index unter
   `%LOCALAPPDATA%\mailchat` bzw. `~/.local/share/mailchat` ab. Dateien, die du in den Chat
   ziehst, hält der Server nur im Arbeitsspeicher.
+- **Internet nur auf Klick.** Nur der Knopf **Updates** fragt bei GitHub nach der neuesten
+  Version; Thunderbird prüft für das Add-on regelmäßig die `updates.json` im Repository.
 - **Andere Programme kommen nicht dran.** Der Server antwortet nur Thunderbird-Add-ons und
   lokalen Kommandozeilenwerkzeugen; Webseiten im Browser werden abgewiesen.
 - **Mails können Anweisungen enthalten.** Das Modell liest Mailtexte, eine Mail könnte also

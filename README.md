@@ -135,6 +135,9 @@ The **Mail Chat** button appears in the toolbar:
 - Click `#id` or a mail card to open that mail in Thunderbird.
 - New mail is indexed every 10 minutes; **Update index** does it right away.
 - **New** starts a fresh conversation.
+- **Updates** looks for a new version on GitHub and installs it on click (`git pull` in a
+  working copy, pip otherwise); the server restarts by itself afterwards. Thunderbird updates
+  the add-on by itself.
 - The answer follows Thunderbird's language (German or English).
 
 Good questions name what the mail is about: *“invoices from the electricity company this
@@ -222,6 +225,8 @@ whisper-server -m models/ggml-large-v3-turbo-q8_0.bin --host 127.0.0.1 --port 80
   most it opens a draft or an event dialog; sending or saving is up to you. It reads
   Thunderbird's files and keeps its index in `%LOCALAPPDATA%\mailchat` or
   `~/.local/share/mailchat`. Files you drop into the chat are kept in memory only.
+- **Internet only on click.** Only the **Updates** button asks GitHub for the latest
+  version; for the add-on, Thunderbird regularly checks `updates.json` in the repository.
 - **Other programs can't ask it.** The server only answers requests from Thunderbird
   add-ons and local command-line tools; web pages in your browser are refused.
 - **Mails can contain instructions.** The model reads mail text, so a mail could try to steer

@@ -439,6 +439,79 @@ input.addEventListener("keydown", (ev) => {
   }
 });
 
+// ------------------------------------------------------------------ updates
+
+function isNewer(a, b) {
+  const pa = String(a).split(".").map(Number), pb = String(b).split(".").map(Number);
+  for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
+    if ((pa[i] || 0) !== (pb[i] || 0)) return (pa[i] || 0) > (pb[i] || 0);
+  }
+  return false;
+}
+
+async function installUpdate(r, box) {
+  const btn = box.querySelector(".install");
+  btn.disabled = true;
+  btn.textContent = _("updateRunning");
+  const note = (text, bad) => box.insertAdjacentHTML("beforeend",
+    `<p class="${bad ? "error" : ""}">${esc(text)}</p>`);
+  try {
+    const res = await (await fetch(`${API}/update`, {
+      method: "POST", headers: HEADERS, body: JSON.stringify({ tag: r.tag }) })).json();
+    if (res.error) { note(_("updateFailed", res.error), true); btn.disabled = false; return; }
+  } catch (e) {
+    note(_("updateFailed", e.message), true);
+    btn.disabled = false;
+    return;
+  }
+  // The server restarts itself with the new code; wait until it answers with it.
+  for (let i = 0; i < 90; i++) {
+    await new Promise((ok) => setTimeout(ok, 1000));
+    try {
+      const s = await (await fetch(`${API}/status`)).json();
+      if (s.version && s.version !== r.current) {
+        btn.remove();
+        note(_("updateDone", s.version));
+        refreshStatus();
+        return;
+      }
+    } catch (e) { /* restarting */ }
+  }
+  note(_("updateNoRestart"), true);
+}
+
+document.getElementById("update").addEventListener("click", async () => {
+  const box = add("msg", `<p>${esc(_("updateChecking"))}</p>`);
+  let r;
+  try {
+    r = await (await fetch(`${API}/update`, { headers: HEADERS })).json();
+  } catch (e) {
+    box.classList.add("error");
+    box.innerHTML = esc(_("noServer", e.message));
+    return;
+  }
+  if (r.error) {
+    box.classList.add("error");
+    box.innerHTML = esc(_("updateFailed", r.error));
+    return;
+  }
+  const addonOld = isNewer(r.latest, messenger.runtime.getManifest().version);
+  if (!r.available && !addonOld) {
+    box.innerHTML = `<p>${esc(_("updateNone", r.current))}</p>`;
+    return;
+  }
+  let html = `<p><strong>${esc(_("updateAvailable", r.latest))}</strong>
+    <a href="${esc(r.url)}" data-ext="1">${esc(_("updateNotes"))}</a></p>`;
+  if (r.notes) html += renderMarkdown(r.notes);
+  if (r.available) {
+    html += `<p><button type="button" class="install">${esc(_("updateInstall"))}</button></p>`;
+  }
+  if (addonOld) html += `<p>${esc(_("updateAddon"))}</p>`;
+  box.innerHTML = html;
+  box.querySelector(".install")?.addEventListener("click", () => installUpdate(r, box));
+  log.scrollTop = log.scrollHeight;
+});
+
 // ------------------------------------------------------------------ voice
 
 const micBtn = document.getElementById("mic");

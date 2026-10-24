@@ -18,7 +18,7 @@ import urllib.error
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import parse_qs, urlsplit
 
-from . import agent, attachments, config, i18n, indexer, llmhost, voice
+from . import __version__, agent, attachments, config, i18n, indexer, llmhost, update, voice
 from .search import read_mail, search
 
 _state = {"last_index": None, "last_stats": None, "indexing": False, "index_error": None}
@@ -109,7 +109,7 @@ class Handler(BaseHTTPRequestHandler):
             with ThreadPoolExecutor(2) as ex:
                 llm, whisper = ex.submit(llmhost.ok), ex.submit(voice.whisper_ok)
                 llm, whisper = llm.result(), whisper.result() and voice.available()
-            return self._json({"mails": total, "llm": llm, "llm_on_demand": bool(config.LLM_UNIT),
+            return self._json({"version": __version__, "mails": total, "llm": llm, "llm_on_demand": bool(config.LLM_UNIT),
                                "llm_model": config.LLM_MODEL, "profile": str(config.PROFILE or ""),
                                "whisper": whisper,
                                "recording": voice.recording(), **_state})
@@ -119,6 +119,12 @@ class Handler(BaseHTTPRequestHandler):
                                          after=q.get("after"), before=q.get("before"),
                                          sort=q.get("sort", "relevance"),
                                          limit=int(q.get("limit", 20))))
+        if u.path == "/api/update":
+            # Only on request: the one place where mailchat goes to the internet.
+            try:
+                return self._json(update.check())
+            except Exception as e:
+                return self._json({"error": f"{type(e).__name__}: {e}"})
         if u.path.startswith("/api/mail/"):
             with _db() as con:
                 return self._json(read_mail(con, int(u.path.rsplit("/", 1)[1])))
@@ -141,6 +147,11 @@ class Handler(BaseHTTPRequestHandler):
             return self._json(voice.cancel(self._lang()))
         if u.path == "/api/chat":
             return self._chat(self._body())
+        if u.path == "/api/update":
+            res = update.install(str(self._body().get("tag") or ""))
+            if res.get("ok"):
+                update.restart_later(busy=lambda: _state["indexing"])
+            return self._json(res)
         if u.path == "/api/file":
             # A file dropped into the chat: its text is extracted once and kept in
             # memory, the model reads it by id. The file itself stays in the add-on.
