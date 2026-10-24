@@ -80,6 +80,13 @@ def _doctor() -> int:
              + ("found" if voice.available() else "missing"), "pip install sounddevice")
     else:
         print("  --   voice input off (no whisper server at " + config.WHISPER_URL + ")")
+    # Attachments: each tool is optional, without it that format stays unreadable.
+    import shutil
+    for exe, what in (("pdftotext", "PDF attachments (poppler-utils)"),
+                      ("tesseract", "scans and photos without a vision model (Tesseract OCR)"),
+                      ("soffice", "old Word/Excel files .doc/.xls/.rtf (LibreOffice)")):
+        found = shutil.which(exe) or (exe == "soffice" and shutil.which("libreoffice"))
+        print(("  ok   " if found else "  --   ") + what + ("" if found else ": not installed"))
     return 1 if bad else 0
 
 

@@ -72,8 +72,9 @@ Select `mailchat.xpi`:
 
 ![Select the file](docs/screenshots/windows-addon-file.png)
 
-Thunderbird asks for permissions: reading your mails (to open cited mails) and access to
-`127.0.0.1` (the mailchat server on your own computer). Click **Add**:
+Thunderbird asks for permissions: reading your mails (to open cited mails), composing mails
+(to open drafts with attachments) and access to `127.0.0.1` (the mailchat server on your own
+computer). Click **Add**:
 
 ![Permissions](docs/screenshots/windows-addon-permissions.png)
 
@@ -140,6 +141,25 @@ Good questions name what the mail is about: *“invoices from the electricity co
 year”*, *“when is the parents' evening?”*, *“the link to the upload portal from the tax
 advisor”*.
 
+### Attachments, appointments and mails
+
+- **Attachments are read too**: PDF, Word (.docx, .doc), OpenDocument, calendar files and
+  images. Photos and scanned PDFs are read by the language model if it understands images
+  (Ollama with `gemma4`), otherwise by [Tesseract](https://github.com/tesseract-ocr/tesseract).
+  PDFs need `pdftotext` (poppler), old .doc files LibreOffice – `mailchat doctor` shows what
+  is missing.
+- **Your own files**: via 📎 or just drop them into the chat. *“Put the event on this flyer
+  into my calendar”*.
+- **Appointments**: *“Put the parents' evening into my calendar”*. Date, time, place and
+  programme come from the mail or its attachment. Thunderbird's event dialog opens for you
+  to check and save – **without attendees**, nobody is invited. The dialog is opened by the
+  add-on [ThunderAI Sparks](https://micz.it/thunderbird-addon-thunderai/#sparks);
+  without Sparks you get the event as an .ics file to import.
+- **Mails with attachments**: *“Send the flyer to Anna Miller”* or *“Send the invoice from
+  the electricity company to my tax advisor”*. The model looks the address up in your mail
+  (and asks if there are several), writes a short text and opens the draft with the
+  attachment in the compose window. **Nothing is sent until you click Send.**
+
 ## Configuration
 
 Without a config file mailchat uses the defaults below. To change something, create the file
@@ -156,6 +176,12 @@ llm_url = "http://127.0.0.1:11434/v1/chat/completions"
 
 # Only if mailchat picks the wrong Thunderbird profile:
 # profile = "C:\\Users\\me\\AppData\\Roaming\\Thunderbird\\Profiles\\abcd1234.default-release"
+
+# Images in attachments: by default the language model above; if it does not
+# understand images, Tesseract takes over. Own image model, or "off" (Tesseract only):
+# vision_url = "http://127.0.0.1:11434/v1/chat/completions"
+# vision_model = "gemma4:12b"
+# vision = "off"
 
 skip_folders = "spam,junk"     # folder names that are never indexed
 reindex = 600                  # seconds between index updates
@@ -192,13 +218,16 @@ whisper-server -m models/ggml-large-v3-turbo-q8_0.bin --host 127.0.0.1 --port 80
 - **Everything stays on your computer.** The server listens on `127.0.0.1` only; mail
   content goes to the language model you configure – by default Ollama on the same machine.
   If you point `llm_url` at another computer or a cloud service, your mail goes there.
-- **Read-only.** mailchat never changes, moves or sends mail. It reads Thunderbird's files
-  and keeps its index in `%LOCALAPPDATA%\mailchat` or `~/.local/share/mailchat`.
+- **Read-only.** mailchat never changes, moves or sends mail and never saves an event. At
+  most it opens a draft or an event dialog; sending or saving is up to you. It reads
+  Thunderbird's files and keeps its index in `%LOCALAPPDATA%\mailchat` or
+  `~/.local/share/mailchat`. Files you drop into the chat are kept in memory only.
 - **Other programs can't ask it.** The server only answers requests from Thunderbird
   add-ons and local command-line tools; web pages in your browser are refused.
 - **Mails can contain instructions.** The model reads mail text, so a mail could try to steer
-  its answer (“prompt injection”). The model can only search and read – it cannot send,
-  delete or open anything – but treat answers with the usual care.
+  its answer (“prompt injection”). The model can search, read and open drafts or event
+  dialogs – it cannot send, save or delete anything. Check answers, and especially the
+  recipients and attachments of a draft, with the usual care.
 
 See [PRIVACY.md](PRIVACY.md) for the add-on's privacy policy.
 
@@ -207,7 +236,9 @@ See [PRIVACY.md](PRIVACY.md) for the add-on's privacy policy.
 - Search finds words and word beginnings, not parts in the middle of words
   (“invoice” finds “invoices”, but German “antrag” does not find “Parteitagsantrag”).
   The model tries variants on its own.
-- Attachment *contents* (PDF, Word …) are not read, only their file names.
+- Full-text search only knows the file names of attachments; the model reads their content
+  when it looks at a mail more closely. Text recognition on photos is not perfect – check
+  date and time in the event dialog.
 - Only mail that Thunderbird keeps locally is found. Thunderbird's newer *maildir* storage
   is not supported, only the default *mbox*.
 - Deleted mail disappears from the index after Thunderbird compacts the folder

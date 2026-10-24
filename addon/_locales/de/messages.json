@@ -202,5 +202,93 @@
         "content": "$1"
       }
     }
+  },
+  "attachTitle": {
+    "message": "Datei anhängen (oder in den Chat ziehen)"
+  },
+  "fileReading": {
+    "message": "wird gelesen …"
+  },
+  "fileNoText": {
+    "message": "kein Text lesbar, kann aber verschickt werden"
+  },
+  "fileRemove": {
+    "message": "Entfernen"
+  },
+  "fileStillReading": {
+    "message": "Einen Moment – die Datei wird noch gelesen."
+  },
+  "openAgain": {
+    "message": "Öffnen"
+  },
+  "noSparks": {
+    "message": "Für den Termin-Dialog fehlt das Add-on „ThunderAI Sparks“. Stattdessen:"
+  },
+  "eventFailed": {
+    "message": "Der Termin-Dialog ging nicht auf ($ARG$). Stattdessen:",
+    "placeholders": {
+      "arg": {
+        "content": "$1"
+      }
+    }
+  },
+  "downloadIcs": {
+    "message": "als .ics-Datei speichern und in Thunderbird importieren"
+  },
+  "attachMissing": {
+    "message": "Nicht angehängt (nicht mehr gefunden): $ARG$",
+    "placeholders": {
+      "arg": {
+        "content": "$1"
+      }
+    }
+  },
+  "composeFailed": {
+    "message": "Das Verfassen-Fenster ging nicht auf: $ARG$",
+    "placeholders": {
+      "arg": {
+        "content": "$1"
+      }
+    }
+  },
+  "toolAttachment": {
+    "message": "lese Anhang $ARG$",
+    "placeholders": {
+      "arg": {
+        "content": "$1"
+      }
+    }
+  },
+  "toolFile": {
+    "message": "lese Datei $ARG$",
+    "placeholders": {
+      "arg": {
+        "content": "$1"
+      }
+    }
+  },
+  "toolContact": {
+    "message": "suche Adresse von $ARG$",
+    "placeholders": {
+      "arg": {
+        "content": "$1"
+      }
+    }
+  },
+  "toolEvent": {
+    "message": "öffne Termin „$ARG$“",
+    "placeholders": {
+      "arg": {
+        "content": "$1"
+      }
+    }
+  },
+  "toolCompose": {
+    "message": "öffne Entwurf an $ARG$",
+    "placeholders": {
+      "arg": {
+        "content": "$1"
+      }
+    }
   }
 }

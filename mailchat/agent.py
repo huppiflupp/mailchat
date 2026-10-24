@@ -8,13 +8,13 @@ import sqlite3
 import urllib.request
 from collections.abc import Iterator
 
-from . import config, i18n, llmhost
+from . import actions, attachments, config, i18n, llmhost
 from .search import mail_ref, read_mail, search
 
 MAX_ROUNDS = 8
 MIN_SEARCHES = 3
 
-SYSTEM = """You are a search assistant for the user's e-mail mailbox. Today is {today}.
+SYSTEM = """You are an assistant for the user's e-mail mailbox. Now is {today}.
 You know NOTHING about the mails except what the tools return.
 
 How to search:
@@ -30,6 +30,32 @@ How to search:
 - Never invent links, content or meanings of abbreviations. Quote links exactly as they appear
   in the tool result, preferably as a Markdown link [text](URL).
 - Every new question needs a new search. Earlier answers in the conversation do not replace it.
+- Attachments (PDF, Word, images, calendar files) often hold the actual content, e.g. the date
+  of an invitation. Read them with `read_attachment`. Name attachments by their file name,
+  never as a link.
+- Files the user gives you in the chat appear as [file f1a2b3c4: "name"]. Read them with
+  `read_file`.
+
+Appointments:
+- When the user wants an appointment in the calendar, find the mail, read it and its
+  attachments (invitations and programmes are often PDF, Word or image files), or read the given
+  file. Then call `create_event` with date, time, place and title from there. Leave `end` out
+  if no end is given. If something essential is unclear (several dates, no date at all), ask.
+- The description is for the calendar: a few lines on what it is, the programme, links,
+  and from whom the invitation came. No [#id] references there.
+- The event is only for the user's own calendar: it never has attendees, nobody is invited.
+- `create_event` opens Thunderbird's event dialog; the user checks and saves it there. So do
+  not ask for confirmation first – the dialog is the confirmation. Only mention it if the date
+  lies in the past.
+
+Writing mails:
+- When the user wants to send a file or write to someone, look up the address with
+  `find_contact` – never guess one. With several plausible people, ask which one.
+- Write the mail as the user, short and friendly, in the language the two used before
+  (default {language}), with a greeting but without the user's name or signature – Thunderbird
+  adds the signature. Do not invent context ("as requested", "as discussed") the user did not give.
+- `compose_mail` opens a draft with the files attached; the user sends it. Never say that a
+  mail was sent.
 
 Answer:
 - In {language}, short and friendly{informal}. Refer to every mail you mention with [#id],
@@ -67,7 +93,64 @@ TOOLS = [
         "description": "Reads one mail completely: headers, body, all links, attachment names.",
         "parameters": {"type": "object", "properties": {
             "id": {"type": "integer"}}, "required": ["id"]}}},
+    {"type": "function", "function": {
+        "name": "read_attachment",
+        "description": "Reads the text of a mail's attachments (PDF, Word, OpenDocument, images "
+                       "via OCR, calendar files). Without name: the first few attachments.",
+        "parameters": {"type": "object", "properties": {
+            "id": {"type": "integer", "description": "mail id"},
+            "name": {"type": "string", "description": "attachment file name (optional)"}},
+            "required": ["id"]}}},
+    {"type": "function", "function": {
+        "name": "read_file",
+        "description": "Reads the text of a file the user gave in the chat.",
+        "parameters": {"type": "object", "properties": {
+            "file": {"type": "string", "description": "file id, e.g. f1a2b3c4"}},
+            "required": ["file"]}}},
+    {"type": "function", "function": {
+        "name": "find_contact",
+        "description": "Finds mail addresses by a person's name or part of the address, from "
+                       "senders and recipients of all mails. Most frequent first.",
+        "parameters": {"type": "object", "properties": {
+            "name": {"type": "string", "description": "e.g. 'Anna Müller' or 'steuerberater'"}},
+            "required": ["name"]}}},
+    {"type": "function", "function": {
+        "name": "create_event",
+        "description": "Opens Thunderbird's dialog for a new event in the user's own calendar, "
+                       "filled in. Never with attendees.",
+        "parameters": {"type": "object", "properties": {
+            "summary": {"type": "string", "description": "title"},
+            "start": {"type": "string", "description": "YYYY-MM-DDTHH:MM local time, or "
+                                                       "YYYY-MM-DD for an all-day event"},
+            "end": {"type": "string", "description": "same format; default one hour after start"},
+            "all_day": {"type": "boolean"},
+            "location": {"type": "string"},
+            "description": {"type": "string", "description": "short agenda, links, notes; "
+                                                             "name the source mail or file"}},
+            "required": ["summary", "start"]}}},
+    {"type": "function", "function": {
+        "name": "compose_mail",
+        "description": "Opens a new mail in Thunderbird's compose window for the user to check "
+                       "and send, with files attached.",
+        "parameters": {"type": "object", "properties": {
+            "to": {"type": "array", "items": {"type": "string"},
+                   "description": "addresses from find_contact, e.g. 'Anna Müller <anna@example.com>'"},
+            "subject": {"type": "string"},
+            "body": {"type": "string", "description": "plain text of the mail"},
+            "files": {"type": "array", "items": {"type": "string"},
+                      "description": "ids of files the user gave in the chat"},
+            "mail_attachments": {"type": "array", "items": {"type": "object", "properties": {
+                "id": {"type": "integer"}, "name": {"type": "string"}}},
+                "description": "attachments of indexed mails to send along"}},
+            "required": ["to", "subject", "body"]}}},
 ]
+
+ACTIONS = {"create_event": "event", "compose_mail": "compose"}
+NOTES = {"create_event": "Thunderbird's event dialog is open, filled in. It is NOT saved yet: "
+                         "tell the user to check it and click save.",
+         "compose_mail": "Thunderbird's compose window is open with this draft. It is NOT sent "
+                         "yet: tell the user to check it and send it."}
+FILE_RE = re.compile(r"\[file (f[0-9a-f]{8})")
 
 
 def llm(messages: list[dict], tools: str = "auto", timeout: int = 300) -> dict:
@@ -114,7 +197,21 @@ def _call_tool(con: sqlite3.Connection, name: str, args: dict) -> dict:
         res = read_mail(con, int(args.get("id", 0)))
         if "links" in res:
             res["links"] = _links(res["links"])
+        if "id" in res:
+            # The index keeps only file names; this also shows inline calendar data.
+            res["attachments"] = [f"{a['name']} ({a['type']}, {max(1, a['size'] >> 10)} KB)"
+                                  for a in attachments.list_attachments(con, res["id"])]
         return res
+    if name == "read_attachment":
+        return attachments.read_attachment(con, int(args.get("id", 0)), str(args.get("name") or ""))
+    if name == "read_file":
+        return attachments.read_upload(str(args.get("file", "")))
+    if name == "find_contact":
+        return actions.find_contact(con, str(args.get("name", "")))
+    if name == "create_event":
+        return actions.make_event(args)
+    if name == "compose_mail":
+        return actions.make_draft(con, args)
     return {"error": f"unknown tool {name}"}
 
 
@@ -132,7 +229,7 @@ def chat(con: sqlite3.Connection, history: list[dict], lang: str = "en") -> Iter
     """
     for text in llmhost.ensure(lang):
         yield {"type": "status", "text": text}
-    today = dt.date.today().strftime("%A, %Y-%m-%d")
+    today = dt.datetime.now().strftime("%A, %Y-%m-%d %H:%M")
     lang = i18n.norm(lang)
     system = SYSTEM.format(today=today, language=i18n.LANGUAGE_NAMES[lang],
                            informal=", addressing the user informally (du)" if lang == "de" else "")
@@ -145,6 +242,11 @@ def chat(con: sqlite3.Connection, history: list[dict], lang: str = "en") -> Iter
                  for x in re.findall(r"#(\d+)", str(m.get("content", "")))}
     url_owner: dict[str, int] = {}
     read_any = False
+    # A question about a file given in the chat, or an address lookup, needs no mail search.
+    last_user = next((str(m.get("content", "")) for m in reversed(history)
+                      if m.get("role") == "user"), "")
+    searched_enough = bool(FILE_RE.search(last_user))
+    opened: set[str] = set()  # models sometimes repeat an action call verbatim
 
     for rnd in range(MAX_ROUNDS + 1):
         size = sum(len(str(m.get("content", ""))) for m in messages)
@@ -154,10 +256,10 @@ def chat(con: sqlite3.Connection, history: list[dict], lang: str = "en") -> Iter
         # until something turns up (at most MIN_SEARCHES rounds). And they answer from
         # search snippets, which miss deadlines and amounts, so once there are hits
         # they must read at least one mail before answering.
-        must_search = not known_ids and rnd < MIN_SEARCHES
-        must_read = known_ids and not read_any and rnd < MIN_SEARCHES + 1
+        must_search = not known_ids and not searched_enough and rnd < MIN_SEARCHES
+        must_read = known_ids and not read_any and not searched_enough and rnd < MIN_SEARCHES + 1
         mode = ("none" if rnd == MAX_ROUNDS or size > config.LLM_CONTEXT_CHARS
-                else "required" if rnd == 0 or must_search or must_read
+                else "required" if (rnd == 0 and not searched_enough) or must_search or must_read
                 else "auto")
         msg = llm(messages, tools=mode)
         calls = msg.get("tool_calls") or []
@@ -195,14 +297,21 @@ def chat(con: sqlite3.Connection, history: list[dict], lang: str = "en") -> Iter
             except json.JSONDecodeError:
                 args = {}
             yield {"type": "tool", "name": name, "args": args}
-            read_any |= name == "read_mail"
+            read_any |= name in ("read_mail", "read_attachment")
+            searched_enough |= name in ("read_file", "find_contact", *ACTIONS)
+            key = name + json.dumps(args, sort_keys=True)
             try:
-                result = _call_tool(con, name, args)
+                result = ({"ok": True, "note": "already opened, do not repeat"} if key in opened
+                          else _call_tool(con, name, args))
             except Exception as e:
                 result = {"error": str(e)}
+            if name in ACTIONS and "error" not in result and key not in opened:
+                opened.add(key)
+                yield {"type": ACTIONS[name], "data": result}
+                result = {"ok": True, "note": NOTES[name]}
             rows = result.get("results") if name == "search_mails" else [result]
             for r in rows or []:
-                if "id" in r:
+                if isinstance(r.get("id"), int):
                     known_ids.add(r["id"])
                     for url in _urls(r):
                         url_owner.setdefault(url, r["id"])

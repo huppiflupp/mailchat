@@ -60,7 +60,32 @@ form textarea {
   border: 1px solid var(--border); background: var(--bg); color: var(--text);
 }
 form button { font-size: 14px; padding: 0 18px; background: var(--accent); color: #fff; border: 0; }
-#mic { font-size: 18px; padding: 0 14px; background: var(--panel); color: var(--text); border: 1px solid var(--border); }
+#mic, #attach { font-size: 18px; padding: 0 14px; background: var(--panel); color: var(--text); border: 1px solid var(--border); }
 #mic.rec { background: var(--warn); border-color: var(--warn); animation: pulse 1.2s infinite; }
 #mic.busy { opacity: .6; cursor: progress; }
 @keyframes pulse { 50% { opacity: .55; } }
+
+.files {
+  display: flex; flex-wrap: wrap; gap: 6px; padding: 8px 20px 0; background: var(--panel);
+  border-top: 1px solid var(--border);
+}
+.files + form { border-top: 0; }
+.chip {
+  display: inline-flex; align-items: center; gap: 6px; padding: 2px 4px 2px 10px;
+  border-radius: 12px; background: var(--user); font-size: 12.5px;
+}
+.chip.busy { opacity: .6; }
+.chip.bad { color: var(--warn); }
+.chip button { border: 0; background: none; padding: 0 6px; font-size: 13px; color: inherit; }
+.msg.user .chip { margin: 6px 6px 0 0; padding-right: 10px; }
+body.drop main { outline: 2px dashed var(--accent); outline-offset: -10px; }
+.card {
+  margin-top: 10px; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border);
+  background: var(--bg); display: grid; grid-template-columns: auto 1fr auto; gap: 2px 10px;
+  align-items: center;
+}
+.card .icon { font-size: 20px; grid-row: span 2; }
+.card .title { font-weight: 600; }
+.card .meta { grid-column: 2; color: var(--muted); font-size: 12.5px; white-space: pre-wrap; }
+.card button { grid-column: 3; grid-row: 1 / span 2; }
+.card .note { grid-column: 1 / -1; color: var(--warn); font-size: 12.5px; }

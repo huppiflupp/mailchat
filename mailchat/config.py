@@ -109,6 +109,13 @@ LLM_START_TIMEOUT = _get("llm_start_timeout", 180)
 LLM_IDLE = _get("llm_idle", 1200)
 OLLAMA_URL = _get("ollama_url", "http://127.0.0.1:11434")
 
+# Images in attachments (photos, scans) are read by a vision-capable model. Empty
+# url/model = the chat LLM above (Ollama's gemma4 sees images). If that fails, or
+# with vision = "off", Tesseract OCR is used when installed.
+VISION = _get("vision", "on")
+VISION_URL = _get("vision_url", "")
+VISION_MODEL = _get("vision_model", "")
+
 # ------------------------------------------------------------------ server
 
 HOST = "127.0.0.1"  # never expose mail content to the network

@@ -202,5 +202,93 @@
         "content": "$1"
       }
     }
+  },
+  "attachTitle": {
+    "message": "Attach a file (or drop it into the chat)"
+  },
+  "fileReading": {
+    "message": "reading …"
+  },
+  "fileNoText": {
+    "message": "no readable text, can still be sent"
+  },
+  "fileRemove": {
+    "message": "Remove"
+  },
+  "fileStillReading": {
+    "message": "One moment – the file is still being read."
+  },
+  "openAgain": {
+    "message": "Open"
+  },
+  "noSparks": {
+    "message": "The event dialog needs the add-on “ThunderAI Sparks”. Instead:"
+  },
+  "eventFailed": {
+    "message": "The event dialog did not open ($ARG$). Instead:",
+    "placeholders": {
+      "arg": {
+        "content": "$1"
+      }
+    }
+  },
+  "downloadIcs": {
+    "message": "save as .ics file and import it into Thunderbird"
+  },
+  "attachMissing": {
+    "message": "Not attached (no longer found): $ARG$",
+    "placeholders": {
+      "arg": {
+        "content": "$1"
+      }
+    }
+  },
+  "composeFailed": {
+    "message": "The compose window did not open: $ARG$",
+    "placeholders": {
+      "arg": {
+        "content": "$1"
+      }
+    }
+  },
+  "toolAttachment": {
+    "message": "reading attachment $ARG$",
+    "placeholders": {
+      "arg": {
+        "content": "$1"
+      }
+    }
+  },
+  "toolFile": {
+    "message": "reading file $ARG$",
+    "placeholders": {
+      "arg": {
+        "content": "$1"
+      }
+    }
+  },
+  "toolContact": {
+    "message": "looking up the address of $ARG$",
+    "placeholders": {
+      "arg": {
+        "content": "$1"
+      }
+    }
+  },
+  "toolEvent": {
+    "message": "opening event “$ARG$”",
+    "placeholders": {
+      "arg": {
+        "content": "$1"
+      }
+    }
+  },
+  "toolCompose": {
+    "message": "opening draft to $ARG$",
+    "placeholders": {
+      "arg": {
+        "content": "$1"
+      }
+    }
   }
 }

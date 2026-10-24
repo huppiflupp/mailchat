@@ -79,8 +79,9 @@ Wähle `mailchat.xpi`:
 
 ![Datei auswählen](docs/screenshots/windows-addon-file.png)
 
-Thunderbird fragt nach Berechtigungen: Mails lesen (um genannte Mails zu öffnen) und
-Zugriff auf `127.0.0.1` (den mailchat-Server auf deinem eigenen Rechner). Klick auf
+Thunderbird fragt nach Berechtigungen: Mails lesen (um genannte Mails zu öffnen), Mails
+verfassen (um Entwürfe mit Anhang zu öffnen) und Zugriff auf `127.0.0.1` (den mailchat-Server
+auf deinem eigenen Rechner). Klick auf
 **Hinzufügen**:
 
 ![Berechtigungen](docs/screenshots/windows-addon-permissions.png)
@@ -146,6 +147,24 @@ Der Knopf **Mail-Chat** erscheint in der Werkzeugleiste:
 Gute Fragen nennen, worum es in der Mail geht: *„Rechnungen vom Stromanbieter aus diesem
 Jahr“*, *„Wann ist der Elternabend?“*, *„der Link zum Upload-Portal vom Steuerberater“*.
 
+### Anhänge, Termine und Mails
+
+- **Anhänge werden mitgelesen**: PDF, Word (.docx, .doc), OpenDocument, Kalenderdateien und
+  Bilder. Fotos und gescannte PDFs liest das Sprachmodell, wenn es Bilder versteht (Ollama mit
+  `gemma4`), sonst [Tesseract](https://github.com/tesseract-ocr/tesseract). Für PDFs braucht
+  es `pdftotext` (poppler), für alte .doc-Dateien LibreOffice – `mailchat doctor` zeigt, was fehlt.
+- **Eigene Dateien**: über 📎 oder einfach in den Chat ziehen. *„Trag mir die Veranstaltung
+  auf dem Flyer ein“*.
+- **Termine**: *„Trag mir den Elternabend in den Kalender ein“*. Datum, Uhrzeit, Ort und
+  Programm kommen aus der Mail oder ihrem Anhang. Es öffnet sich Thunderbirds Termin-Dialog
+  zum Prüfen und Speichern – **ohne Teilnehmer**, niemand wird eingeladen. Den Dialog öffnet
+  das Add-on [ThunderAI Sparks](https://micz.it/thunderbird-addon-thunderai/#sparks);
+  ohne Sparks gibt es den Termin als .ics-Datei zum Importieren.
+- **Mails mit Anhang**: *„Schick den Flyer an Anna Müller“* oder *„Schick die Rechnung von
+  den Stadtwerken an den Steuerberater“*. Die Adresse sucht das Modell in deinen Mails (bei
+  mehreren Treffern fragt es nach), schreibt einen kurzen Text und öffnet den Entwurf mit
+  Anhang im Verfassen-Fenster. **Abgeschickt wird erst, wenn du auf Senden klickst.**
+
 ## Einstellungen
 
 Ohne Konfigurationsdatei nimmt mailchat die Standardwerte unten. Zum Ändern legst du die
@@ -162,6 +181,12 @@ llm_url = "http://127.0.0.1:11434/v1/chat/completions"
 
 # Nur wenn mailchat das falsche Thunderbird-Profil erwischt:
 # profile = "C:\\Users\\ich\\AppData\\Roaming\\Thunderbird\\Profiles\\abcd1234.default-release"
+
+# Bilder in Anhängen: standardmäßig das Sprachmodell oben; versteht es keine Bilder,
+# übernimmt Tesseract. Eigenes Bildmodell oder "off" (nur Tesseract):
+# vision_url = "http://127.0.0.1:11434/v1/chat/completions"
+# vision_model = "gemma4:12b"
+# vision = "off"
 
 skip_folders = "spam,junk"     # Ordnernamen, die nie eingelesen werden
 reindex = 600                  # Sekunden zwischen zwei Index-Läufen
@@ -198,14 +223,17 @@ whisper-server -m models/ggml-large-v3-turbo-q8_0.bin --host 127.0.0.1 --port 80
 - **Alles bleibt auf deinem Rechner.** Der Server lauscht nur auf `127.0.0.1`; Mailinhalte
   gehen an das Sprachmodell, das du einstellst – standardmäßig Ollama auf demselben Rechner.
   Zeigt `llm_url` auf einen anderen Computer oder einen Cloud-Dienst, gehen deine Mails dorthin.
-- **Nur lesend.** mailchat ändert, verschiebt oder verschickt nie eine Mail. Es liest die
-  Dateien von Thunderbird und legt seinen Index unter `%LOCALAPPDATA%\mailchat` bzw.
-  `~/.local/share/mailchat` ab.
+- **Nur lesend.** mailchat ändert, verschiebt oder verschickt nie eine Mail und speichert
+  keinen Termin. Es öffnet höchstens einen Entwurf oder Termin-Dialog; senden bzw. speichern
+  tust du. Es liest die Dateien von Thunderbird und legt seinen Index unter
+  `%LOCALAPPDATA%\mailchat` bzw. `~/.local/share/mailchat` ab. Dateien, die du in den Chat
+  ziehst, hält der Server nur im Arbeitsspeicher.
 - **Andere Programme kommen nicht dran.** Der Server antwortet nur Thunderbird-Add-ons und
   lokalen Kommandozeilenwerkzeugen; Webseiten im Browser werden abgewiesen.
 - **Mails können Anweisungen enthalten.** Das Modell liest Mailtexte, eine Mail könnte also
-  versuchen, die Antwort zu beeinflussen („Prompt Injection“). Das Modell kann nur suchen und
-  lesen – nichts verschicken, löschen oder öffnen –, aber prüf Antworten mit der üblichen Vorsicht.
+  versuchen, die Antwort zu beeinflussen („Prompt Injection“). Das Modell kann suchen, lesen
+  und Entwürfe oder Termin-Dialoge öffnen – nichts verschicken, speichern oder löschen. Prüf
+  Antworten und vor allem Empfänger und Anhänge eines Entwurfs mit der üblichen Vorsicht.
 
 Die Datenschutzerklärung des Add-ons steht in [PRIVACY.md](PRIVACY.md).
 
@@ -213,7 +241,9 @@ Die Datenschutzerklärung des Add-ons steht in [PRIVACY.md](PRIVACY.md).
 
 - Die Suche findet Wörter und Wortanfänge, aber keine Teile in der Wortmitte: „antrag“
   findet „Antragsbuch“, nicht aber „Parteitagsantrag“. Das Modell probiert selbst Varianten.
-- Der *Inhalt* von Anhängen (PDF, Word …) wird nicht gelesen, nur ihre Dateinamen.
+- Die Volltextsuche kennt von Anhängen nur die Dateinamen; ihren Inhalt liest das Modell
+  erst, wenn es eine Mail genauer ansieht. Texterkennung auf Fotos ist nicht fehlerfrei –
+  Datum und Uhrzeit im Termin-Dialog bitte prüfen.
 - Gefunden wird nur, was Thunderbird lokal vorhält. Die neuere Speicherart *Maildir* wird
   nicht unterstützt, nur das übliche *mbox*.
 - Gelöschte Mails verschwinden aus dem Index, nachdem Thunderbird den Ordner komprimiert hat

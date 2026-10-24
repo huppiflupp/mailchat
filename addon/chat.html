@@ -19,7 +19,10 @@
       <span data-i18n="hintLocal"></span>
     </div>
   </main>
+  <div id="files" class="files" hidden></div>
   <form id="form">
+    <input id="file" type="file" multiple hidden>
+    <button id="attach" type="button" data-i18n-title="attachTitle">📎</button>
     <textarea id="input" rows="2" data-i18n-placeholder="placeholderNoVoice" autofocus></textarea>
     <button id="mic" type="button" data-i18n-title="micTitle" hidden>🎤</button>
     <button id="send" type="submit" data-i18n="sendBtn"></button>

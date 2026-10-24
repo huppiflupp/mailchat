@@ -18,7 +18,7 @@ import urllib.error
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import parse_qs, urlsplit
 
-from . import agent, config, i18n, indexer, llmhost, voice
+from . import agent, attachments, config, i18n, indexer, llmhost, voice
 from .search import read_mail, search
 
 _state = {"last_index": None, "last_stats": None, "indexing": False, "index_error": None}
@@ -141,6 +141,16 @@ class Handler(BaseHTTPRequestHandler):
             return self._json(voice.cancel(self._lang()))
         if u.path == "/api/chat":
             return self._chat(self._body())
+        if u.path == "/api/file":
+            # A file dropped into the chat: its text is extracted once and kept in
+            # memory, the model reads it by id. The file itself stays in the add-on.
+            b = self._body()
+            try:
+                return self._json(attachments.add_upload(str(b.get("name") or "file"),
+                                                         str(b.get("type") or ""),
+                                                         str(b.get("data") or "")))
+            except (ValueError, TypeError) as e:
+                return self._json({"error": str(e)}, 400)
         self._json({"error": "not found"}, 404)
 
     def _chat(self, req: dict) -> None:
